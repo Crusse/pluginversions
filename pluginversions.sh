@@ -52,7 +52,7 @@ while true ; do
 
     versionStr=""
 
-    gravityFormsVer="$( wget -q -O - "${url}/wp-content/plugins/gravityforms/change_log.txt" | grep -m 1 '^Version' | sed -E 's/^Version[^[:digit:]]//' )"
+    gravityFormsVer="$( wget --tries 3 --ignore-length --timeout 60 -q -O - "${url}/wp-content/plugins/gravityforms/change_log.txt" | grep -m 1 '^Version' | sed -E 's/^Version[^[:digit:]]//' )"
     if [[ "$gravityFormsVer" != "" ]] ; then
       versionStr+="Gravity Forms ${gravityFormsVer}\n"
     fi
@@ -66,7 +66,7 @@ while true ; do
       continue
     fi
 
-    report+="${url}\n------------------\n"
+    report+="---- ${url} ----\n"
     report+="$versionStr"
     report+="\n"
   done < "$urlsFile"
