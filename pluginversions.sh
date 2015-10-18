@@ -62,6 +62,18 @@ while true ; do
       versionStr+="AsteWWPub_WP ${wwPubVer}\n"
     fi
 
+    siteContent="$( wget -q -O - "${url}" )"
+    asMagVer="$( echo -n "$siteContent" | grep -ohE '"general":\{"version":"[[:digit:].]+' | sed -E 's/^.+"//' )"
+    if [[ "$asMagVer" == "" ]] ; then
+      asMagVer="$( echo -n "$siteContent" | grep -ohE '<!-- Asteikko Magazine [[:digit:].]+' | sed -E 's/<!--.+ //' )"
+    fi
+    if [[ "$asMagVer" == "" ]] ; then
+      asMagVer="$( echo -n "$siteContent" | grep -ohE '"general":\{"minimummagazineversion":"[[:digit:].]+' | sed -E 's/^.+"//' )"
+    fi
+    if [[ "$asMagVer" != "" ]] ; then
+      versionStr+="Asteikko Mag ${asMagVer}\n"
+    fi
+
     if [[ "$versionStr" = "" ]] ; then
       continue
     fi
